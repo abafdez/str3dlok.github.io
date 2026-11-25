@@ -1,6 +1,7 @@
 ---
 title: "Hola, soy Alejandro Baeza (Str3Dlok)"
 date: 2026-11-21 10:00:00 +0100
+published: true
 author: "Alejandro Baeza"
 image: /assets/img/posts/2026-11-21-presentacion.webp
 image_alt: "Logo de Str3Dlok sobre una rejilla técnica"

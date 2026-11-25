@@ -1,0 +1,46 @@
+# Perfil del autor: página de contacto y datos estructurados. Se edita desde /admin/ (Páginas → Perfil).
+# Las redes también están en _config.yml (social.links) para el SEO de jekyll-seo-tag: si cambian, actualizar ambos sitios.
+
+nombre: Alejandro Baeza
+alias: Str3Dlok
+cargo: "Investigador predoctoral · Artista técnico 3D"
+etiqueta: Quién soy
+avatar: /assets/img/logo-str3dlok.webp
+avatar_alt: Logo Str3Dlok
+entradilla: "Artista técnico 3D, desarrollador de videojuegos y docente. Investigo cómo llevar las técnicas de producción de videojuegos a la digitalización del patrimonio cultural."
+
+bio: |-
+  Empecé en el mundo de la equitación y terminé en el de la informática. Sí, de los caballos a los polígonos: no es el camino más habitual, pero la educación siempre estuvo ahí, de fondo.
+
+  Con la llegada del COVID abrí un canal de YouTube para divulgar sobre Blender. Entre tutorial y tutorial acabé especializándome en él y, gracias a eso, pude organizar eventos junto a asociaciones como la Asociación de Usuarios de Blender (AUB), de la que fui vicepresidente, en citas como Blendiberia en 2024 y 2025.
+
+  Desde que entré en el mundo de los videojuegos he creado experiencias virtuales, he modelado, he hecho rigging, he animado y he dirigido proyectos, incluso para marcas de alto nivel.
+
+  Hoy, después de un máster de profesorado y una carrera en diseño de videojuegos, me meto de lleno en la investigación con una tesis doctoral sobre la optimización de modelos 3D y la conservación del patrimonio cultural.
+
+facetas:
+  - titulo: Videojuegos
+    texto: Prototipos y juegos indie en Unity y Unreal.
+  - titulo: Divulgación
+    texto: Canal de tutoriales técnicos de Blender.
+  - titulo: Docencia
+    texto: Formación en 3D y desarrollo de videojuegos.
+
+herramientas: [Blender, Unreal, Unity, ZBrush, Substance, 3ds Max]
+
+# Temas para los buscadores (datos estructurados "knowsAbout"); no se muestran en la página
+temas: [Patrimonio cultural, Gemelos digitales, Fotogrametría, Modelado 3D, Desarrollo de videojuegos, Blender, Unreal Engine]
+
+email: str3dlok@gmail.com
+# red: linkedin, youtube, artstation, instagram, x (cada una tiene su icono en _includes/icono-red.html)
+redes:
+  - red: linkedin
+    url: https://www.linkedin.com/in/alejandro-baeza-fernandez-str3dlok/
+  - red: youtube
+    url: https://www.youtube.com/@str3dlok
+  - red: artstation
+    url: https://www.artstation.com/str3dlok
+  - red: instagram
+    url: https://www.instagram.com/str3dlok
+  - red: x
+    url: https://x.com/str3dlok

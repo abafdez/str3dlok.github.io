@@ -6,7 +6,8 @@
 <meta name="theme-color" content="#0a0b0d">
 <script>try{var t=localStorage.getItem('tema');if(t=='plano')t='neon';if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 {% seo %}
-<meta name="robots" content="{{ page.robots | default: 'index, follow, max-image-preview:large, max-snippet:-1' }}">
+{%- comment -%} site.noindex lo activa el despliegue de prueba (copias del repositorio), para no duplicar la web en buscadores {%- endcomment %}
+<meta name="robots" content="{% if site.noindex %}noindex, nofollow{% else %}{{ page.robots | default: 'index, follow, max-image-preview:large, max-snippet:-1' }}{% endif %}">
 {% feed_meta %}
 <link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}">
 <link rel="icon" href="{{ '/favicon.ico' | relative_url }}" sizes="any">
@@ -24,9 +25,12 @@
     </a>
     <div class="head-right">
       <nav>
-        <a href="{{ '/' | relative_url }}" data-nav="inicio" {% if page.nav == 'inicio' %}class="active"{% endif %}>Inicio</a>
-        <a href="{{ '/bitacora/' | relative_url }}" data-nav="bitacora" {% if page.nav == 'bitacora' or page.layout == 'post' %}class="active"{% endif %}>Bitácora</a>
-        <a href="{{ '/contacto/' | relative_url }}" data-nav="contacto" {% if page.nav == 'contacto' %}class="active"{% endif %}>Contacto</a>
+        {%- comment -%} Menú en _data/sitio.yml. Las entradas de la bitácora marcan "bitacora" como activa. {%- endcomment -%}
+        {%- assign nav_actual = page.nav -%}
+        {%- if page.layout == 'post' -%}{%- assign nav_actual = 'bitacora' -%}{%- endif -%}
+        {%- for m in site.data.sitio.menu %}
+        <a href="{% include url.html u=m.enlace %}" data-nav="{{ m.clave }}" {% if nav_actual == m.clave %}class="active"{% endif %}>{{ m.texto }}</a>
+        {%- endfor %}
       </nav>
       <button class="theme-btn cut" id="theme-btn" type="button" aria-label="Cambiar tema" title="Cambiar tema">
         <span class="dot"></span><span class="theme-name mono">Oscuro</span>
@@ -39,12 +43,13 @@
 {{ content }}
 </main>
 
-<div class="ai-note"><p>Esta web y sus contenidos se han creado con el apoyo de herramientas de inteligencia artificial, bajo la dirección y revisión del autor.</p></div>
+{%- assign pie = site.data.sitio.pie %}
+{% if pie.nota_ia %}<div class="ai-note"><p>{{ pie.nota_ia }}</p></div>{% endif %}
 
 <footer id="bottom">
   <div class="wrap">
-    <span class="mono">© {{ 'now' | date: '%Y' }} Alejandro Baeza · Str3Dlok</span>
-    <span class="mono">Investigación doctoral · 2026 — 2030</span>
+    <span class="mono">© {{ 'now' | date: '%Y' }} {{ pie.derechos }}</span>
+    <span class="mono">{{ pie.lema }}</span>
   </div>
 </footer>
 

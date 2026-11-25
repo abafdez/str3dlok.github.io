@@ -1,0 +1,15 @@
+{%- comment -%}
+  Añade site.baseurl a las rutas absolutas (src="/…", href="/…") de un HTML que viene de Markdown:
+  el cuerpo de las entradas, la biografía… El gestor de contenidos guarda las imágenes como
+  /assets/img/posts/foto.webp y sin esto se romperían cuando la web vive en una subcarpeta
+  (p. ej. usuario.github.io/str3dlok.github.io/). Con baseurl vacío no cambia nada.
+  Uso: {% include rutas-base.html html=content %}
+{%- endcomment -%}
+{%- if site.baseurl == nil or site.baseurl == '' -%}
+{{- include.html -}}
+{%- else -%}
+{%- assign con_src = ' src="' | append: site.baseurl | append: '/' -%}
+{%- assign con_href = ' href="' | append: site.baseurl | append: '/' -%}
+{%- assign doble = site.baseurl | append: '//' -%}
+{{- include.html | replace: ' src="/', con_src | replace: ' href="/', con_href | replace: doble, '//' -}}
+{%- endif -%}

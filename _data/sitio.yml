@@ -1,0 +1,18 @@
+# Elementos comunes a todas las páginas: menú y pie. Se edita desde /admin/ (Páginas → Menú y pie).
+
+# "clave" debe coincidir con el campo "nav" de la página para marcarla como activa.
+menu:
+  - texto: Inicio
+    enlace: /
+    clave: inicio
+  - texto: Bitácora
+    enlace: /bitacora/
+    clave: bitacora
+  - texto: Contacto
+    enlace: /contacto/
+    clave: contacto
+
+pie:
+  derechos: "Alejandro Baeza · Str3Dlok"
+  lema: "Investigación doctoral · 2026 — 2030"
+  nota_ia: "Esta web y sus contenidos se han creado con el apoyo de herramientas de inteligencia artificial, bajo la dirección y revisión del autor."

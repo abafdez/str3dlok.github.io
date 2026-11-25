@@ -5,6 +5,7 @@ sitemap: false
 # Todos los buscadores y asistentes de IA pueden rastrear e indexar el sitio.
 User-agent: *
 Allow: /
+Disallow: /admin/
 
 # Rastreadores de buscadores con IA (permitidos de forma explícita)
 User-agent: GPTBot

@@ -1,0 +1,112 @@
+# Construye la web con Jekyll y la publica en GitHub Pages.
+#
+# El mismo archivo sirve para el repositorio principal y para cualquier copia (fork) de pruebas:
+#   - La ruta base sale de GitHub (actions/configure-pages): "" en str3dlok.github.io y
+#     "/str3dlok.github.io" en usuario.github.io/str3dlok.github.io/.
+#   - Solo publica si en Settings → Pages → Source está elegido "GitHub Actions". Con "Deploy from a branch"
+#     se limita a comprobar que la web compila (y GitHub sigue publicando a su manera, como siempre).
+#   - En una copia, la web se marca "noindex" y el gestor de contenidos (/admin/) apunta a esa copia,
+#     no al repositorio principal.
+name: Web
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Un despliegue cada vez; uno nuevo no cancela el que está en marcha
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  construir:
+    name: Construir
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    outputs:
+      publicar: ${{ steps.modo.outputs.publicar }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true # bundle install + caché de gemas
+
+      - name: ¿Publica GitHub Actions?
+        id: modo
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tipo=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq .build_type 2>/dev/null || echo "sin-pages")
+          echo "Pages: $tipo"
+          if [ "$tipo" = "workflow" ]; then echo "publicar=true" >> "$GITHUB_OUTPUT"; else echo "publicar=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Datos de Pages
+        id: pages
+        if: steps.modo.outputs.publicar == 'true'
+        uses: actions/configure-pages@v6
+
+      - name: Configuración del despliegue
+        if: steps.modo.outputs.publicar == 'true'
+        env:
+          ORIGEN: ${{ steps.pages.outputs.origin }}
+          RUTA_BASE: ${{ steps.pages.outputs.base_path }}
+          ES_COPIA: ${{ github.event.repository.fork }}
+        run: |
+          {
+            echo "url: \"$ORIGEN\""
+            echo "baseurl: \"$RUTA_BASE\""
+            echo "noindex: $ES_COPIA"
+          } > _config.despliegue.yml
+          cat _config.despliegue.yml
+
+      - name: Construir con Jekyll
+        env:
+          JEKYLL_ENV: production
+          JEKYLL_GITHUB_TOKEN: ${{ github.token }}
+          PAGES_REPO_NWO: ${{ github.repository }}
+        run: |
+          configs="_config.yml"
+          [ -f _config.despliegue.yml ] && configs="$configs,_config.despliegue.yml"
+          bundle exec jekyll build --config "$configs"
+
+      - name: Gestor de contenidos apuntando a este repositorio
+        if: steps.modo.outputs.publicar == 'true'
+        env:
+          URL_WEB: ${{ steps.pages.outputs.base_url }}
+        run: |
+          f=_site/admin/config.yml
+          sed -i -E "s|^(  repo: ).*|\1$GITHUB_REPOSITORY|; s|^(site_url: ).*|\1$URL_WEB|; s|^(display_url: ).*|\1$URL_WEB|" "$f"
+          grep -qx "  repo: $GITHUB_REPOSITORY" "$f" || { echo "::error::No se pudo ajustar backend.repo en $f"; exit 1; }
+          grep -E "^(  repo|site_url|display_url):" "$f"
+
+      - name: Comprobar enlaces internos
+        run: ruby .github/comprobar-enlaces.rb _site "${{ steps.pages.outputs.base_path }}"
+
+      - name: Subir la web
+        if: steps.modo.outputs.publicar == 'true'
+        uses: actions/upload-pages-artifact@v5
+
+  publicar:
+    name: Publicar
+    needs: construir
+    if: needs.construir.outputs.publicar == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - id: despliegue
+        uses: actions/deploy-pages@v5

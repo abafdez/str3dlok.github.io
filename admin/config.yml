@@ -1,0 +1,275 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+# Gestor de contenidos Sveltia CMS → https://str3dlok.github.io/admin/
+# Documentación: https://sveltiacms.app/en/docs
+# Cada cambio guardado en el gestor es un commit en GitHub; GitHub Pages reconstruye la web sola.
+
+backend:
+  name: github
+  repo: Str3Dlok/str3dlok.github.io
+  branch: main
+  commit_messages:
+    create: "Crear {{collection}}: {{slug}}"
+    update: "Actualizar {{collection}}: {{slug}}"
+    delete: "Borrar {{collection}}: {{slug}}"
+    uploadMedia: "Subir {{path}}"
+    deleteMedia: "Borrar {{path}}"
+
+site_url: https://str3dlok.github.io
+display_url: https://str3dlok.github.io
+
+# Los campos opcionales vacíos no se escriben: en Liquid una cadena vacía cuenta como "verdadero"
+# y {% if page.youtube %} mostraría un botón sin enlace.
+output:
+  omit_empty_optional_fields: true
+
+# Imágenes: por defecto en assets/img; las de la bitácora, en assets/img/posts (ver la colección)
+media_folder: assets/img
+public_folder: /assets/img
+media_libraries:
+  default:
+    config:
+      slugify_filename: true
+      # Se convierten a WebP en el navegador al subirlas (también fotos HEIC del móvil)
+      transformations:
+        raster_image:
+          format: webp
+          quality: 85
+          width: 1600
+          height: 1600
+
+# Nombres de archivo solo con letras sin tildes, números y guiones (Jekyll se lleva mal con lo demás)
+slug:
+  encoding: ascii
+  clean_accents: true
+
+collections:
+  # ───────────────────────── Bitácora ─────────────────────────
+  - name: bitacora
+    label: Bitácora
+    label_singular: Entrada
+    icon: menu_book
+    description: >-
+      Diario público de la tesis. Sin resultados concretos, tablas, parámetros ni herramientas propias,
+      y sin nombres de personas, entidades, obras o colaboradores. Tono cercano y con humor: es un diario, no un paper.
+    folder: _posts
+    create: true
+    # Jekyll exige AAAA-MM-DD-titulo.md
+    slug: "{{date | date('YYYY-MM-DD')}}-{{slug}}"
+    identifier_field: title
+    summary: "{{title}} · {{date | date('DD/MM/YYYY')}}"
+    sortable_fields:
+      fields: [date, title]
+      default:
+        field: date
+        direction: descending
+    media_folder: /assets/img/posts
+    public_folder: /assets/img/posts
+    fields:
+      - name: title
+        label: Título
+        widget: string
+      - name: date
+        label: Fecha
+        widget: datetime
+        # Mismo formato que las entradas existentes: 2026-11-21 10:00:00 +0100
+        format: "YYYY-MM-DD HH:mm:ss ZZ"
+        input_timezone: Europe/Madrid
+        default: "{{now}}"
+        hint: "La fecha forma parte del nombre del archivo y de la dirección de la entrada: cambiarla después no cambia la dirección."
+      - name: published
+        label: Publicada
+        widget: boolean
+        default: true
+        hint: "Desactivado = borrador: se guarda en GitHub pero no aparece en la web."
+      - name: description
+        label: Descripción corta
+        widget: text
+        maxlength: 200
+        hint: "1-2 frases (unos 160 caracteres). Se ve en la lista de la bitácora y en buscadores y redes."
+      - name: resumen
+        label: Resumen
+        widget: text
+        required: false
+        hint: "3-4 frases. Aparece bajo el título dentro de la entrada. Si se deja vacío se usa la descripción corta."
+      - name: image
+        label: Imagen de cabecera
+        widget: image
+        required: false
+        hint: "Formato apaisado, idealmente 1600×900. Se usa como miniatura, cabecera y vista previa en redes. Se convierte a WebP sola."
+      - name: image_alt
+        label: Descripción de la imagen
+        widget: string
+        required: false
+        hint: "Qué se ve en la imagen, para lectores de pantalla y buscadores."
+      - name: tags
+        label: Hashtags
+        widget: list
+        required: false
+        hint: "Cortos, en minúsculas, sin tildes ni espacios (usar guion): metodologia, fotogrametria, diario…"
+      - name: youtube
+        label: Vídeo de YouTube
+        widget: string
+        required: false
+        pattern: ['^https://', 'Debe ser un enlace que empiece por https://']
+        hint: "Enlace al vídeo. Se muestra como botón al final de la entrada."
+      - name: sketchfab
+        label: Modelo de Sketchfab
+        widget: string
+        required: false
+        hint: "Solo el ID del modelo: lo que va después de /models/ en la dirección. Se muestra como visor 3D al final."
+      - name: author
+        label: Autor
+        widget: hidden
+        default: Alejandro Baeza
+      - name: body
+        label: Texto
+        widget: richtext
+        hint: "Usa títulos de nivel 2 para las secciones (Qué se está investigando, Qué se ha descubierto, A tener en cuenta…)."
+        # Componentes disponibles en el editor. Los componentes propios (carrusel, comparador, modelo 3D…)
+        # se registran en admin/componentes.js y hay que añadir aquí su id.
+        editor_components: [image, code-block, table, hr]
+
+  # ───────────────────────── Páginas (archivos de _data) ─────────────────────────
+  - name: paginas
+    label: Páginas
+    icon: web
+    description: Textos de las páginas fijas. En los títulos se puede usar **negrita** (sale en dorado) y [enlaces](#ancla).
+    editor:
+      preview: false
+    files:
+      - name: inicio
+        label: Inicio
+        file: _data/inicio.yml
+        fields:
+          - name: portada
+            label: Portada
+            widget: object
+            fields:
+              - { name: etiqueta, label: Etiqueta superior, widget: string }
+              - name: titulo
+                label: Título
+                widget: text
+                hint: "Cada línea es un renglón. **Palabra** = en dorado."
+              - { name: entradilla, label: Entradilla, widget: text }
+              - name: botones
+                label: Botones
+                widget: list
+                summary: "{{texto}} → {{enlace}}"
+                fields:
+                  - { name: texto, label: Texto, widget: string }
+                  - name: enlace
+                    label: Enlace
+                    widget: string
+                    hint: "/bitacora/ para una página, #lineas para una sección de esta página o https://… para otra web."
+                  - { name: principal, label: Botón principal (dorado), widget: boolean, default: false }
+              - name: cifras
+                label: Cifras
+                widget: list
+                summary: "{{valor}} {{texto}}"
+                fields:
+                  - { name: valor, label: Valor, widget: string }
+                  - { name: texto, label: Texto, widget: string }
+              - name: contar_entradas
+                label: Mostrar el número de entradas
+                widget: boolean
+                default: true
+                hint: Se añade al final de las cifras y se calcula solo.
+          - name: lineas
+            label: Líneas de investigación
+            widget: object
+            fields:
+              - { name: etiqueta, label: Etiqueta, widget: string }
+              - { name: titulo, label: Título, widget: string }
+              - name: tarjetas
+                label: Tarjetas
+                widget: list
+                summary: "{{letra}} · {{titulo}}"
+                fields:
+                  - { name: letra, label: Letra, widget: string }
+                  - { name: etiqueta, label: Etiqueta, widget: string }
+                  - { name: etiqueta_destacada, label: Etiqueta en dorado, widget: boolean, default: false }
+                  - { name: titulo, label: Título, widget: string }
+                  - { name: texto, label: Texto, widget: text }
+          - name: flujo
+            label: Flujo de trabajo
+            widget: object
+            fields:
+              - { name: etiqueta, label: Etiqueta, widget: string }
+              - { name: titulo, label: Título, widget: string }
+              - name: pasos
+                label: Pasos
+                widget: list
+                summary: "{{titulo}}"
+                hint: Se numeran solos (01, 02…). El último se resalta.
+                fields:
+                  - { name: titulo, label: Título, widget: string }
+                  - { name: texto, label: Texto, widget: string }
+          - name: bitacora
+            label: Bitácora reciente
+            widget: object
+            fields:
+              - { name: etiqueta, label: Etiqueta, widget: string }
+              - { name: titulo, label: Título, widget: string }
+              - { name: cantidad, label: Entradas a mostrar, widget: number, value_type: int, min: 1, max: 12, default: 3 }
+              - { name: vacio, label: Texto si no hay entradas, widget: string }
+              - { name: boton, label: Texto del botón, widget: string }
+
+      - name: perfil
+        label: Perfil y contacto
+        file: _data/perfil.yml
+        fields:
+          - { name: nombre, label: Nombre, widget: string }
+          - { name: alias, label: Alias, widget: string }
+          - { name: cargo, label: Cargo, widget: string, hint: "Para buscadores (datos estructurados)." }
+          - { name: etiqueta, label: Etiqueta superior, widget: string }
+          - { name: avatar, label: Imagen, widget: image }
+          - { name: avatar_alt, label: Descripción de la imagen, widget: string }
+          - { name: entradilla, label: Entradilla, widget: text }
+          - { name: bio, label: Biografía, widget: richtext, editor_components: [] }
+          - name: facetas
+            label: Facetas
+            widget: list
+            summary: "{{titulo}}"
+            hint: Se numeran solas (01, 02…).
+            fields:
+              - { name: titulo, label: Título, widget: string }
+              - { name: texto, label: Texto, widget: string }
+          - { name: herramientas, label: Herramientas, widget: list }
+          - { name: temas, label: Temas (solo buscadores), widget: list, hint: "No se muestran: ayudan a los buscadores a saber de qué sabe el autor." }
+          - { name: email, label: Email, widget: string }
+          - name: redes
+            label: Redes
+            widget: list
+            summary: "{{red}}"
+            hint: "Si cambian, avisar para actualizar también social.links en _config.yml (SEO)."
+            fields:
+              - name: red
+                label: Red
+                widget: select
+                options:
+                  - { label: LinkedIn, value: linkedin }
+                  - { label: YouTube, value: youtube }
+                  - { label: ArtStation, value: artstation }
+                  - { label: Instagram, value: instagram }
+                  - { label: X, value: x }
+              - { name: url, label: Enlace, widget: string, pattern: ['^https://', 'Debe empezar por https://'] }
+
+      - name: sitio
+        label: Menú y pie
+        file: _data/sitio.yml
+        fields:
+          - name: menu
+            label: Menú
+            widget: list
+            summary: "{{texto}} → {{enlace}}"
+            fields:
+              - { name: texto, label: Texto, widget: string }
+              - { name: enlace, label: Enlace, widget: string }
+              - { name: clave, label: Clave, widget: string, hint: "Igual que el campo nav de la página, para marcarla como activa." }
+          - name: pie
+            label: Pie
+            widget: object
+            fields:
+              - { name: derechos, label: "Texto tras © año", widget: string }
+              - { name: lema, label: Lema, widget: string }
+              - { name: nota_ia, label: Nota sobre el uso de IA, widget: text }

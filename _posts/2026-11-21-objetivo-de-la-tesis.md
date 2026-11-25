@@ -1,6 +1,7 @@
 ---
 title: "El objetivo: un estándar para conservar el patrimonio en digital"
 date: 2026-11-21 12:00:00 +0100
+published: true
 author: "Alejandro Baeza"
 image: /assets/img/posts/2026-11-21-objetivo.webp
 image_alt: "Arco clásico dibujado en malla que se transforma en nube de puntos"

@@ -1,0 +1,64 @@
+# Textos de la página de inicio. Se editan desde /admin/ (Páginas → Inicio).
+# En los textos cortos se puede usar Markdown en línea: **negrita** (en los títulos sale en dorado) y [enlaces](#ancla).
+
+portada:
+  etiqueta: "Tesis doctoral · 2026 — 2030"
+  titulo: |-
+    Gemelos digitales
+    de patrimonio **cultural**
+  entradilla: "Un flujo de trabajo validable y replicable, pensado para cualquier persona: digitalizar patrimonio con la fiabilidad que exigen restauradores y especialistas, sin necesidad de ser experto."
+  botones:
+    - texto: "Ver avances →"
+      enlace: /bitacora/
+      principal: true
+    - texto: "Explorar ↓"
+      enlace: "#lineas"
+      principal: false
+  cifras:
+    - valor: "3"
+      texto: Líneas
+    - valor: "2030"
+      texto: Defensa prevista
+  contar_entradas: true
+
+lineas:
+  etiqueta: Líneas de investigación
+  titulo: "Tres frentes, un [mismo flujo](#flujo)"
+  tarjetas:
+    - letra: A
+      etiqueta: "Escaneado · Procesado · Visualización"
+      etiqueta_destacada: true
+      titulo: Digitalización 3D con técnicas de videojuegos
+      texto: "Técnicas de videojuegos y de alta tecnología aplicadas a todo el proceso: desde el escaneado hasta el procesado y la visualización final del patrimonio cultural."
+    - letra: B
+      etiqueta: Existente y perdido
+      etiqueta_destacada: false
+      titulo: Gemelos digitales
+      texto: "Generación de gemelos digitales fieles de obras y espacios, tanto existentes como desaparecidos, para estudiarlos, conservarlos y compartirlos."
+    - letra: C
+      etiqueta: Estándar técnico
+      etiqueta_destacada: false
+      titulo: Universalización de procesos
+      texto: "Procesos de digitalización estandarizados y replicables a nivel técnico, para que cualquier persona pueda aplicarlos con garantías."
+
+flujo:
+  etiqueta: Flujo de trabajo
+  titulo: Del objeto físico al gemelo digital
+  pasos:
+    - titulo: Captura
+      texto: Fotogrametría y escaneo documentados.
+    - titulo: Procesado
+      texto: Reconstrucción de malla y textura.
+    - titulo: Optimización
+      texto: Niveles de detalle y técnicas de videojuegos.
+    - titulo: Validación
+      texto: Métricas objetivas y revisión experta.
+    - titulo: Gemelo
+      texto: Visualización en tiempo real.
+
+bitacora:
+  etiqueta: Últimos avances
+  titulo: Bitácora reciente
+  cantidad: 3
+  vacio: "// Primera entrada en preparación"
+  boton: "Todo el archivo →"

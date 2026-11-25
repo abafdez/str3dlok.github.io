@@ -7,7 +7,7 @@ layout: default
       <a href="{{ '/' | relative_url }}">Inicio</a><span>/</span><a href="{{ '/bitacora/' | relative_url }}">Bitácora</a><span>/</span><em>{{ page.title }}</em>
     </nav>
 
-    {% if page.image %}<figure class="post-hero cut gc"><img src="{{ page.image | relative_url }}" alt="{{ page.image_alt | default: page.title | escape }}" width="1600" height="900" fetchpriority="high"></figure>{% endif %}
+    {% if page.image and page.image != '' %}<figure class="post-hero cut gc"><img src="{{ page.image | relative_url }}" alt="{{ page.image_alt | default: page.title | escape }}" width="1600" height="900" fetchpriority="high"></figure>{% endif %}
 
     <article class="article">
       <div class="post-head center">
@@ -17,12 +17,12 @@ layout: default
         <p class="resumen">{{ page.resumen | default: page.description }}</p>
       </div>
 
-      <div class="post-body">{{ content }}</div>
+      <div class="post-body">{% include rutas-base.html html=content %}</div>
 
-      {% if page.sketchfab %}
+      {% if page.sketchfab and page.sketchfab != '' %}
       <div class="embed cut"><iframe title="Modelo 3D" src="https://sketchfab.com/models/{{ page.sketchfab }}/embed?ui_theme=dark" allow="autoplay; fullscreen; xr-spatial-tracking" loading="lazy"></iframe></div>
       {% endif %}
-      {% if page.youtube %}<div class="center"><a class="btn ghost cut" href="{{ page.youtube }}" target="_blank" rel="noopener">▶ Ver vídeo en YouTube ↗</a></div>{% endif %}
+      {% if page.youtube and page.youtube != '' %}<div class="center"><a class="btn ghost cut" href="{{ page.youtube }}" target="_blank" rel="noopener">▶ Ver vídeo en YouTube ↗</a></div>{% endif %}
 
       <div class="post-tags center">
         <span class="mono">Hashtags</span>

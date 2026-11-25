@@ -4,6 +4,8 @@ title: "Tesis doctoral: gemelos digitales de patrimonio"
 description: "Tesis doctoral de Alejandro Baeza (Str3Dlok): digitalización 3D de patrimonio cultural con técnicas de videojuegos y gemelos digitales."
 nav: inicio
 ---
+{%- comment -%} Los textos de esta página están en _data/inicio.yml (editables desde /admin/). {%- endcomment -%}
+{%- assign d = site.data.inicio -%}
 <div class="wrap">
   <div class="hero center">
     <!-- Visual de fondo: malla 3D ligera en SVG -->
@@ -13,17 +15,21 @@ nav: inicio
         <path class="s-faint" d="M145 101.75l110 63.5M255 101.75l-110 63.5M90 197l110 63.5 110-63.5M145 292.25V165.25M255 292.25V165.25"/></g>
       <g class="f-gold"><circle cx="200" cy="197" r="3"/><circle cx="310" cy="133.5" r="2.5"/><circle cx="90" cy="260.5" r="2.5"/><circle cx="200" cy="70" r="2.5"/></g>
     </svg>
-    <div class="label mono">Tesis doctoral · 2026 — 2030</div>
-    <h1>Gemelos digitales<br>de patrimonio <span class="gold">cultural</span></h1>
-    <p class="lead">Un flujo de trabajo validable y replicable, pensado para cualquier persona: digitalizar patrimonio con la fiabilidad que exigen restauradores y especialistas, sin necesidad de ser experto.</p>
+    <div class="label mono">{{ d.portada.etiqueta }}</div>
+    <h1>{% include md-linea.html t=d.portada.titulo %}</h1>
+    <p class="lead">{{ d.portada.entradilla }}</p>
     <div class="actions">
-      <a class="btn cut" href="{{ '/bitacora/' | relative_url }}">Ver avances →</a>
-      <a class="btn ghost cut" href="#lineas">Explorar ↓</a>
+      {%- for b in d.portada.botones %}
+      <a class="btn {% unless b.principal %}ghost {% endunless %}cut" href="{% include url.html u=b.enlace %}">{{ b.texto }}</a>
+      {%- endfor %}
     </div>
     <div class="stats">
-      <div><b>3</b><span class="mono">Líneas</span></div>
-      <div><b>2030</b><span class="mono">Defensa prevista</span></div>
+      {%- for c in d.portada.cifras %}
+      <div><b>{{ c.valor }}</b><span class="mono">{{ c.texto }}</span></div>
+      {%- endfor %}
+      {%- if d.portada.contar_entradas %}
       <div><b>{{ site.posts.size | prepend: '0' | slice: -2, 2 }}</b><span class="mono">Entradas</span></div>
+      {%- endif %}
     </div>
   </div>
 </div>
@@ -31,13 +37,13 @@ nav: inicio
 <section class="tight" id="lineas">
   <div class="wrap">
     <div class="head center">
-      <div class="label mono">Líneas de investigación</div>
-      <h2>Tres frentes, un <a class="inline" href="#flujo">mismo flujo</a></h2>
+      <div class="label mono">{{ d.lineas.etiqueta }}</div>
+      <h2>{% include md-linea.html t=d.lineas.titulo %}</h2>
     </div>
     <div class="grid3 lines">
-      <div class="card cut gc"><div class="num">A</div><span class="tag a">Escaneado · Procesado · Visualización</span><h3>Digitalización 3D con técnicas de videojuegos</h3><p>Técnicas de videojuegos y de alta tecnología aplicadas a todo el proceso: desde el escaneado hasta el procesado y la visualización final del patrimonio cultural.</p></div>
-      <div class="card cut gc"><div class="num">B</div><span class="tag">Existente y perdido</span><h3>Gemelos digitales</h3><p>Generación de gemelos digitales fieles de obras y espacios, tanto existentes como desaparecidos, para estudiarlos, conservarlos y compartirlos.</p></div>
-      <div class="card cut gc"><div class="num">C</div><span class="tag">Estándar técnico</span><h3>Universalización de procesos</h3><p>Procesos de digitalización estandarizados y replicables a nivel técnico, para que cualquier persona pueda aplicarlos con garantías.</p></div>
+      {%- for t in d.lineas.tarjetas %}
+      <div class="card cut gc"><div class="num">{{ t.letra }}</div><span class="tag{% if t.etiqueta_destacada %} a{% endif %}">{{ t.etiqueta }}</span><h3>{{ t.titulo }}</h3><p>{{ t.texto }}</p></div>
+      {%- endfor %}
     </div>
   </div>
 </section>
@@ -45,15 +51,13 @@ nav: inicio
 <section class="tight" id="flujo">
   <div class="wrap">
     <div class="head center">
-      <div class="label mono">Flujo de trabajo</div>
-      <h2>Del objeto físico al gemelo digital</h2>
+      <div class="label mono">{{ d.flujo.etiqueta }}</div>
+      <h2>{% include md-linea.html t=d.flujo.titulo %}</h2>
     </div>
     <div class="pipe cut">
-      <div><span class="mono gold">01</span><h3>Captura</h3><p>Fotogrametría y escaneo documentados.</p></div>
-      <div><span class="mono gold">02</span><h3>Procesado</h3><p>Reconstrucción de malla y textura.</p></div>
-      <div><span class="mono gold">03</span><h3>Optimización</h3><p>Niveles de detalle y técnicas de videojuegos.</p></div>
-      <div><span class="mono gold">04</span><h3>Validación</h3><p>Métricas objetivas y revisión experta.</p></div>
-      <div><span class="mono gold">05</span><h3>Gemelo</h3><p>Visualización en tiempo real.</p></div>
+      {%- for p in d.flujo.pasos %}
+      <div><span class="mono gold">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span><h3>{{ p.titulo }}</h3><p>{{ p.texto }}</p></div>
+      {%- endfor %}
     </div>
   </div>
 </section>
@@ -61,13 +65,13 @@ nav: inicio
 <section class="tight">
   <div class="wrap narrow">
     <div class="head center">
-      <div class="label mono">Últimos avances</div>
-      <h2>Bitácora reciente</h2>
+      <div class="label mono">{{ d.bitacora.etiqueta }}</div>
+      <h2>{% include md-linea.html t=d.bitacora.titulo %}</h2>
     </div>
     <div class="list">
-      {% for p in site.posts limit:3 %}{% include post-row.html %}{% endfor %}
-      {% if site.posts.size == 0 %}<p class="empty mono">// Primera entrada en preparación</p>{% endif %}
+      {% for p in site.posts limit: d.bitacora.cantidad %}{% include post-row.html %}{% endfor %}
+      {% if site.posts.size == 0 %}<p class="empty mono">{{ d.bitacora.vacio }}</p>{% endif %}
     </div>
-    <div class="center" style="margin-top:32px"><a class="btn ghost cut" href="{{ '/bitacora/' | relative_url }}">Todo el archivo →</a></div>
+    <div class="center" style="margin-top:32px"><a class="btn ghost cut" href="{{ '/bitacora/' | relative_url }}">{{ d.bitacora.boton }}</a></div>
   </div>
 </section>

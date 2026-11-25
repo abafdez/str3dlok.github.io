@@ -46,11 +46,18 @@ defaults:
     values:
       layout: post
       author: "Alejandro Baeza"
+  # Gestor de contenidos: fuera del mapa del sitio
+  - scope: { path: "admin" }
+    values:
+      sitemap: false
 
 feed:
   path: feed.xml
 
 markdown: kramdown
+# Sin tema: GitHub Pages aplica "primer" por defecto, que genera su propio /assets/css/style.css
+# y pisa (según el orden de construcción) la hoja de estilos de la web.
+theme: null
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
@@ -60,3 +67,7 @@ exclude:
   - README.md
   - SECURITY.md
   - _plantillas
+  # Desarrollo local (en Jekyll 3 esta lista sustituye a la de serie, así que hay que repetirlos)
+  - Gemfile
+  - Gemfile.lock
+  - vendor

@@ -2,6 +2,7 @@
 # PLANTILLA DE ENTRADA (no se publica). Copiar a _posts/AAAA-MM-DD-titulo-corto.md
 title: "Título claro de la entrada"
 date: 2026-01-01 10:00:00 +0100
+published: true                              # false = borrador (no se publica)
 author: "Alejandro Baeza"                    # por defecto ya es él
 image: /assets/img/posts/AAAA-MM-DD-nombre.webp   # miniatura, cabecera y vista previa en redes (WebP, 1600x900, <300 KB)
 image_alt: "Descripción breve de la imagen (accesibilidad y SEO)"

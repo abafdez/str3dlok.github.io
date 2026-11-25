@@ -1,6 +1,6 @@
 {%- comment -%} Fila de la bitácora. Usa la variable de bucle "p". data-* alimenta el buscador. {%- endcomment -%}
 <a class="post" href="{{ p.url | relative_url }}" data-tags="{{ p.tags | join: '|' }}" data-date="{{ p.date | date: '%Y-%m' }}" data-ts="{{ p.date | date: '%s' }}" data-text="{{ p.title | append: ' ' | append: p.description | append: ' ' | append: p.resumen | escape }} {{ p.content | strip_html | strip_newlines | truncatewords: 120, '' | escape }}">
-  <div class="thumb cut">{% if p.image %}<img src="{{ p.image | relative_url }}" alt="" width="168" height="126" loading="lazy" decoding="async">{% endif %}</div>
+  <div class="thumb cut">{% if p.image and p.image != '' %}<img src="{{ p.image | relative_url }}" alt="" width="168" height="126" loading="lazy" decoding="async">{% endif %}</div>
   <div class="post-info">
     <h3>{{ p.title }}</h3>
     <span class="sep"></span>

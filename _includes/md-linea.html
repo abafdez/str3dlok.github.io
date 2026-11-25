@@ -1,0 +1,7 @@
+{%- comment -%}
+  Markdown en línea para títulos y textos cortos que vienen de _data o del gestor de contenidos:
+  **negrita**, *cursiva* y [enlaces](#ancla). Cada salto de línea del texto se convierte en <br>.
+  Uso: {% include md-linea.html t=variable %}
+{%- endcomment -%}
+{%- assign md_html = include.t | markdownify | remove: '<p>' | remove: '</p>' | strip | newline_to_br | replace: '<br />', '<br>' -%}
+{%- include rutas-base.html html=md_html -%}

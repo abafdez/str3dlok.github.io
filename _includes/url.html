@@ -1,0 +1,7 @@
+{%- comment -%}
+  Enlace escrito en el gestor de contenidos → href correcto.
+  "/ruta/" pasa por relative_url; "#ancla", "mailto:" y "https://..." se dejan tal cual.
+  Uso: href="{% include url.html u=variable %}"
+{%- endcomment -%}
+{%- assign primera = include.u | slice: 0 -%}
+{%- if primera == '/' -%}{{ include.u | relative_url }}{%- else -%}{{ include.u }}{%- endif -%}
